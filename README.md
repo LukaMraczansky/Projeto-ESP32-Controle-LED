@@ -1,43 +1,34 @@
-# Projeto: Controle de LED com ESP32 via Servidor Web (Simulação Wokwi)
+# Projeto ESP32 – Controle de LED via Servidor Web (Simulação Wokwi)
 
-Este projeto demonstra o funcionamento de um **servidor web utilizando um ESP32** para controlar um LED através de uma página HTML simples.  
-O desenvolvimento foi realizado integralmente no **Wokwi**, que permite simular o comportamento do microcontrolador e seus periféricos.
-
----
-
-## 📌 Objetivo
-
-Criar um sistema no qual o usuário possa **ligar ou desligar um LED** utilizando botões exibidos em uma página web hospedada no próprio ESP32.
-
-Como o Wokwi não cria redes Wi-Fi reais, o acesso ao servidor ocorre através de uma **interface simulada** gerada pelo próprio emulador.
+Este projeto demonstra como utilizar o **ESP32** para criar um **servidor web** capaz de **ligar e desligar um LED**.  
+O código foi desenvolvido e testado na plataforma de simulação **Wokwi**.
 
 ---
 
-## 🧩 Funcionamento do Projeto
-
-1. O ESP32 cria um ponto de acesso Wi-Fi (simulado).
-2. Um servidor web é iniciado na porta 80.
-3. A página principal contém dois botões:
-   - **LIGAR**
-   - **DESLIGAR**
-4. Cada botão aciona uma rota (endpoint):
-   - `/on` → acende o LED  
-   - `/off` → apaga o LED
-5. O comportamento do LED é mostrado no simulador Wokwi.
+## 📌 Funcionalidades
+- Criação de um **Access Point (Wi-Fi próprio)** pelo ESP32.  
+- Servidor Web que disponibiliza uma página com botões:
+  - **Ligar LED**
+  - **Desligar LED**
+- LED inicia **aceso** ao ligar o ESP32.
+- Interface simples em HTML.
 
 ---
 
-## 🖼️ Captura de Tela da Simulação
+## 🖼️ Simulação do Circuito
 
-A imagem abaixo mostra o projeto em funcionamento no Wokwi:
-
-![Simulação do projeto](assets/simulacao.png)
-
-> 📌 *Lembre-se de colocar a imagem dentro da pasta `assets` com o nome `simulacao.png`.*
+![Simulação do circuito](assets/Captura de tela 2025-11-21 121418.png)
 
 ---
 
-## 🔧 Código Utilizado (`sketch.ino`)
+## 📁 Arquivos do Projeto
+
+- `sketch.ino` → Código-fonte do ESP32.  
+- `assets/` → Pasta contendo imagens utilizadas no README.  
+
+---
+
+## 🧠 Código utilizado
 
 ```cpp
 #include <WiFi.h>
@@ -60,7 +51,7 @@ void handleHome() {
 }
 
 void handleOn() {
-  digitalWrite(ledPin, HIGH);
+  digitalWrite(ledPin, HIGH);  
   server.sendHeader("Location", "/");
   server.send(303);
 }
@@ -74,9 +65,10 @@ void handleOff() {
 void setup() {
   pinMode(ledPin, OUTPUT);
 
-  digitalWrite(ledPin, HIGH); // LED começa aceso
+  digitalWrite(ledPin, HIGH);
 
   Serial.begin(115200);
+
   WiFi.softAP(ssid, password);
 
   Serial.println("Servidor iniciado!");
@@ -86,7 +78,6 @@ void setup() {
   server.on("/", handleHome);
   server.on("/on", handleOn);
   server.on("/off", handleOff);
-
   server.begin();
 }
 
